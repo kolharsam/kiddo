@@ -124,6 +124,7 @@
   ;; Make a helper called get value common for all the instructions
   (let [key (:value (some #(when (= "symbol" (:type %)) %) operands))
         value (:value (some #(when (not= "symbol" (:type %)) %) operands))]
+    ;; perform checks for if the key is not found or not
     (add-to-store var-store key value)))
 
 (defn exec-instruction
@@ -143,3 +144,29 @@
 
 ;; Maybe keep this store permanent
 @var-store
+
+;; Some experiments with error handling
+
+(declare apply-or-error)
+
+(defmacro err->> [val & fns]
+  (let [fns (for [f fns] `(apply-or-error ~f))]
+    `(->> [~val nil]
+          ~@fns)))
+
+(defn apply-or-error
+  [f [val err]]
+  (if (nil? err)
+    (apply f val)
+    [nil err]))
+
+;; Basically the idea is that when you have a
+;; sequence of functions that are to be executed and you have
+;; to either extract a result or an error from them
+;; so applying these would be helpful
+
+;; the function signature could be something like so:
+;; fn [args]
+;; the return type must always be:
+;; [nil "Error Message"]
+;; or [result nil]
