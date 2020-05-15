@@ -31,6 +31,27 @@
 
 ;; (REPL repl-options)
 
+
+;; TODO: See if I can replicate that is being done with the likes of something like
+;; instaparse, sci
+
+;; Another way to make a REPL
+
+(defn repl []
+  (do
+    (print "Liissspp:> ")
+    (flush))
+  (let [user-input (read-line)]
+    (println "the parsed output comes here")
+    (recur)))
+
+;; Running the REPL like so:
+
+;; (defn -main [& args]
+;;    (print "Some initial info")
+;;    (flush)
+;;    (repl)))
+
 (defn is-lowercase?
   "Returns true if word is in lowercase"
   [word]
